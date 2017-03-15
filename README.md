@@ -60,6 +60,7 @@ If everything went well you should see something like:
 [CHG] Device 38:C0:96:5C:C6:60 Trusted: yes
 Changing 38:C0:96:5C:C6:60 trust succeeded
 ```
+Use `quit` to exit bluetoothctl.
 
 This explaination was highly based on [this](https://www.piborg.org/rpi-ps3-help) excellent explaination from PiBorg. 
 I made the modifications to sixpair to work with the navigation controller.
