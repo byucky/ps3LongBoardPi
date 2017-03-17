@@ -85,7 +85,7 @@ class Skateboard():
     def updateSpeed(self, newSpeed):
         return True
     
-    def OutputButtonValues(self):
+    def OutputButtonValues(self, changes):
         print("throttle: " + str(round(self.buttons['axis'],2)))
         print("enable : " + str(self.buttons['enable']))
 
@@ -94,7 +94,7 @@ class Skateboard():
             changes = self.getInput()
             self.update(changes)
             if(is_debug):
-                self.OutputButtonValues()
+                self.OutputButtonValues(changes)
             time.sleep(0.1)
 
 
