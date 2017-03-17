@@ -6,6 +6,7 @@ import time
 import sys
 import threading
 import subprocess
+from pprint import pprint
 
 pathToController = '/dev/input/js0'
 
@@ -19,6 +20,7 @@ INPUTS = {
 is_debug = "debug" in sys.argv
 
 power_off = 0
+powerdown = ["sudo", "shutdown", "now"]
 
 def PowerOffPi():
     elapsed_time = 0
@@ -28,13 +30,16 @@ def PowerOffPi():
             elapsed_time += 1
         else:
             elapsed_time = 0
-    # power off pi
-    print("power off pi")
+    subprocess.call(powerdown)
 
 class Skateboard():
 
     def __init__(self):
         self.powerThread = threading.Thread(target=PowerOffPi)
+        self.powerThread.start()
+        self.j = pygame.joystick.Joystick(0)
+        self.j.init()
+        print(self.j)
         self.buttons = {
             'axis' : 0,
             'enable': 0,
@@ -50,17 +55,17 @@ class Skateboard():
         if events is not None:
             for event in events:
                 if event.type == pygame.JOYAXISMOTION:
-                    if event.axis == INPUTS.THROTTLE_AXIS:
+                    if event.axis == INPUTS["THROTTLE_AXIS"]:
                         changes["axis"] = event.value
                 if event.type == pygame.JOYBUTTONDOWN:
-                    if event.button == INPUTS.THROTTLE_ENABLE:
+                    if event.button == INPUTS["THROTTLE_ENABLE"]:
                         changes["enable"] = 1
-                    if event.button == INPUTS.POWER_OFF:
+                    if event.button == INPUTS["POWER_OFF"]:
                         changes['power_off'] = 1
                 if event.type == pygame.JOYBUTTONUP:
-                    if event.button == INPUTS.THROTTLE_ENABLE:
+                    if event.button == INPUTS["THROTTLE_ENABLE"]:
                         changes["enable"] = 0
-                    if event.button == INPUTS.POWER_OFF:
+                    if event.button == INPUTS["POWER_OFF"]:
                         changes['power_off'] = 0
 
         return changes
@@ -86,8 +91,7 @@ class Skateboard():
         return True
     
     def OutputButtonValues(self, changes):
-        print("throttle: " + str(round(self.buttons['axis'],2)))
-        print("enable : " + str(self.buttons['enable']))
+        pprint(changes)
 
     def mainloop(self):
         while(True):
