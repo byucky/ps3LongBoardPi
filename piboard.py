@@ -98,7 +98,8 @@ class Skateboard():
         while(True):
             changes = self.getInput()
             self.update(changes)
-            if(is_debug):
+            self.PowerOffPi()
+            if(is_debug and changes is not {}):
                 self.OutputButtonValues(changes)
             time.sleep(0.1)
 
