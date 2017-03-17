@@ -1,4 +1,3 @@
-import pygame
 import time
 import os
 #import pigpio
@@ -42,9 +41,11 @@ class Skateboard():
         }
 
     def getInput(self):
-        # get input from controllers
-        events = pygame.event.get()
+
         changes = {}
+
+        get input from controllers
+        events = pygame.event.get()
         if events is not None:
             for event in events:
                 if event.type == pygame.JOYAXISMOTION:
@@ -60,16 +61,17 @@ class Skateboard():
                         changes["enable"] = 0
                     if event.button == INPUTS.POWER_OFF:
                         changes['power_off'] = 0
+
         return changes
 
     def update(self, changes):
         #update state based on gathered input
-        if axis in changes:
+        if "axis" in changes:
             # self.buttons['axis'] = changes['axis']
             self.updateSpeed(changes['axis'])
-        if enable in changes:
+        if "enable" in changes:
             self.buttons['enable'] = changes['enable']
-        if power in changes:
+        if "power" in changes:
             self.buttons['power_off'] = changes['power_off']
             self.adjustPowerOff()
             
@@ -88,8 +90,8 @@ class Skateboard():
 
     def mainloop(self):
         while(True):
-            self.getInput()
-            self.update(btns)
+            changes = self.getInput()
+            self.update(changes)
             if(is_debug):
                 self.OutputButtonValues()
             time.sleep(0.1)
@@ -99,7 +101,14 @@ class Skateboard():
 
 
 def main():
+    pygame.init()
+	os.putenv('SDL_VIDEODRIVER','fbcon')
+	pygame.display.init()	
+	
+	sleep(5.0)
+
     skate = Skateboard()
+    skate.mainloop()
     
 
 if __name__ == "__main__":
