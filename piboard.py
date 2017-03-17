@@ -110,6 +110,7 @@ class Skateboard():
             self.power_off_timer = 0
         
         if self.power_off_timer >= 5:
+            print('powering down')
             subprocess.call(powerdown)
 
 
