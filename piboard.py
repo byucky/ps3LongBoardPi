@@ -44,7 +44,7 @@ class Skateboard():
 
         changes = {}
 
-        get input from controllers
+        # get input from controllers
         events = pygame.event.get()
         if events is not None:
             for event in events:
