@@ -103,7 +103,7 @@ class Skateboard():
 
     def PowerOffPi(self):
         # print("calling power off pi")
-        if self.buttons['power_off'] is 1:s
+        if self.buttons['power_off'] is 1:
             self.power_off_timer += .1
         else:
             self.power_off_timer = 0
