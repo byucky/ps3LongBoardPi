@@ -35,6 +35,7 @@ def PowerOffPi():
 class Skateboard():
 
     def __init__(self):
+        self.power_off_timer = 0
         self.powerThread = threading.Thread(target=PowerOffPi)
         self.powerThread.start()
         self.j = pygame.joystick.Joystick(0)
@@ -100,6 +101,17 @@ class Skateboard():
             if(is_debug):
                 self.OutputButtonValues(changes)
             time.sleep(0.1)
+
+    def PowerOffPi(self):
+        
+        if power_off is 1:
+            self.power_off_timer += .1
+        else:
+            self.power_off_timer = 0
+        
+        if self.power_off_timer >= 5:
+            #subprocess.call(powerdown)
+            print("powering off")
 
 
 def main():
