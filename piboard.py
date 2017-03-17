@@ -40,7 +40,6 @@ class Skateboard():
         self.powerThread.start()
         self.j = pygame.joystick.Joystick(0)
         self.j.init()
-        print(self.j)
         self.buttons = {
             'axis' : 0,
             'enable': 0,
@@ -78,15 +77,14 @@ class Skateboard():
             self.updateSpeed(changes['axis'])
         if "enable" in changes:
             self.buttons['enable'] = changes['enable']
-        if "power" in changes:
+        if "power_off" in changes:
             self.buttons['power_off'] = changes['power_off']
-            self.adjustPowerOff()
             
-    def adjustPowerOff():
-        if self.buttons['power_off'] is 1:
-            power_off = 1
-        elif self.buttons['power_off'] is 0:
-            power_off = 0
+    # def adjustPowerOff():
+    #     if self.buttons['power_off'] is 1:
+    #         power_off = 1
+    #     elif self.buttons['power_off'] is 0:
+    #         power_off = 0
 
     def updateSpeed(self, newSpeed):
         return True
@@ -99,20 +97,20 @@ class Skateboard():
             changes = self.getInput()
             self.update(changes)
             self.PowerOffPi()
-            if(is_debug and changes is not {}):
+            if(is_debug):
                 self.OutputButtonValues(changes)
             time.sleep(0.1)
 
     def PowerOffPi(self):
-        
-        if power_off is 1:
+        # print("calling power off pi")
+        if self.buttons['power_off'] is 1:
+            print(self.power_off_timer)
             self.power_off_timer += .1
         else:
             self.power_off_timer = 0
         
         if self.power_off_timer >= 5:
-            #subprocess.call(powerdown)
-            print("powering off")
+            subprocess.call(powerdown)
 
 
 def main():
