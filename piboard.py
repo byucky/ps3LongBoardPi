@@ -1,3 +1,4 @@
+import pygame
 import time
 import os
 #import pigpio
@@ -97,15 +98,12 @@ class Skateboard():
             time.sleep(0.1)
 
 
-    
-
-
 def main():
     pygame.init()
-	os.putenv('SDL_VIDEODRIVER','fbcon')
-	pygame.display.init()	
-	
-	sleep(5.0)
+    os.putenv('SDL_VIDEODRIVER','fbcon')
+    pygame.display.init()	
+
+    time.sleep(5.0)
 
     skate = Skateboard()
     skate.mainloop()
