@@ -8,6 +8,7 @@ import threading
 import subprocess
 from pprint import pprint
 
+controllerId = 1356
 pathToController = '/dev/input/js0'
 
 INPUTS = {
@@ -17,7 +18,10 @@ INPUTS = {
     "CRUISE" : 10, 
 }
 
+#pi = pigpio.pi()
 is_debug = "debug" in sys.argv
+
+motor = 18
 
 power_off = 0
 powerdown = ["sudo", "shutdown", "now"]
@@ -32,14 +36,18 @@ def PowerOffPi():
             elapsed_time = 0
     subprocess.call(powerdown)
 
+
 class Skateboard():
 
+    min_speed = 1720
+    max_speed = 1100
+
     def __init__(self):
+        #pi.set_PWM_frequency(motor, 50)
+        self.j = None
         self.power_off_timer = 0
         self.powerThread = threading.Thread(target=PowerOffPi)
         self.powerThread.start()
-        self.j = pygame.joystick.Joystick(0)
-        self.j.init()
         self.buttons = {
             'axis' : 0,
             'enable': 0,
@@ -79,13 +87,23 @@ class Skateboard():
             self.buttons['enable'] = changes['enable']
         if "power_off" in changes:
             self.buttons['power_off'] = changes['power_off']
-            
-    # def adjustPowerOff():
-    #     if self.buttons['power_off'] is 1:
-    #         power_off = 1
-    #     elif self.buttons['power_off'] is 0:
-    #         power_off = 0
 
+    def removeController(self):
+        print('remove controller')
+        self.j = None
+
+    def initController(self):
+        print('init cont')
+        self.j = pygame.joystick.Joystick(0)
+        self.j.init()
+
+    def isControllerPresent(self):
+        print('is cont present')
+        print(pygame.joystick.get_count())
+        if pygame.joystick.get_count() <= 0:
+            return False
+        else:
+            return True
     def updateSpeed(self, newSpeed):
         return True
     
@@ -94,15 +112,20 @@ class Skateboard():
 
     def mainloop(self):
         while(True):
-            changes = self.getInput()
-            self.update(changes)
-            self.PowerOffPi()
-            if(is_debug):
-                self.OutputButtonValues(changes)
+            if not self.isControllerPresent():
+                self.removeController()
+            else:
+                if self.j is None:
+                    self.initController()
+
+                changes = self.getInput()
+                self.update(changes)
+                self.PowerOffPi()
+                if(is_debug):
+                    self.OutputButtonValues(changes)
             time.sleep(0.1)
 
     def PowerOffPi(self):
-        # print("calling power off pi")
         if self.buttons['power_off'] is 1:
             self.power_off_timer += .1
         else:
@@ -118,7 +141,7 @@ def main():
     os.putenv('SDL_VIDEODRIVER','fbcon')
     pygame.display.init()	
 
-    time.sleep(5.0)
+    time.sleep(2.0)
 
     skate = Skateboard()
     skate.mainloop()
