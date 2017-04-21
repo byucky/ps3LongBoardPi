@@ -1,12 +1,22 @@
 import pygame
 import time
 import os
-#import pigpio
 import time
 import sys
 import threading
 import subprocess
+import re
 from pprint import pprint
+
+is_debug = "debug" in sys.argv
+notPi = "--not_pi" in sys.argv
+
+if not notPi:
+    import pigpio
+    pi = pigpio.pi()
+else:
+    import fakePiGpio
+    pi = fakePiGpio
 
 controllerId = 1356
 pathToController = '/dev/input/js0'
@@ -18,8 +28,6 @@ INPUTS = {
     "CRUISE" : 10, 
 }
 
-#pi = pigpio.pi()
-is_debug = "debug" in sys.argv
 
 motor = 18
 
@@ -43,7 +51,7 @@ class Skateboard():
     max_speed = 1100
 
     def __init__(self):
-        #pi.set_PWM_frequency(motor, 50)
+        pi.set_PWM_frequency(motor, 50)
         self.j = None
         self.power_off_timer = 0
         self.powerThread = threading.Thread(target=PowerOffPi)
@@ -89,21 +97,34 @@ class Skateboard():
             self.buttons['power_off'] = changes['power_off']
 
     def removeController(self):
-        print('remove controller')
         self.j = None
 
     def initController(self):
         print('init cont')
+        pygame.init()
+        os.putenv('SDL_VIDEODRIVER','fbcon')
+        pygame.display.init()
         self.j = pygame.joystick.Joystick(0)
         self.j.init()
+        print('connected')
+        time.sleep(2.0)
+
 
     def isControllerPresent(self):
-        print('is cont present')
-        print(pygame.joystick.get_count())
-        if pygame.joystick.get_count() <= 0:
+        regex = r"\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}"
+        proc = subprocess.Popen(['hcitool', 'con'], stdout=subprocess.PIPE)
+        text = proc.stdout.read()
+
+        try:
+            found = re.search(regex, text).group(0)
+            print(found)
+            if(found == "00:07:04:EF:27:55"):
+                return True
+            else:
+                return False
+        except AttributeError:
             return False
-        else:
-            return True
+
     def updateSpeed(self, newSpeed):
         return True
     
@@ -136,13 +157,7 @@ class Skateboard():
             subprocess.call(powerdown)
 
 
-def main():
-    pygame.init()
-    os.putenv('SDL_VIDEODRIVER','fbcon')
-    pygame.display.init()	
-
-    time.sleep(2.0)
-
+def main():	
     skate = Skateboard()
     skate.mainloop()
     
