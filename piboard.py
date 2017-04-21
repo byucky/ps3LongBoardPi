@@ -100,14 +100,14 @@ class Skateboard():
         self.j = None
 
     def initController(self):
-        print('init cont')
+        print('connecting controller')
         pygame.init()
         os.putenv('SDL_VIDEODRIVER','fbcon')
         pygame.display.init()
+        time.sleep(3.0)
         self.j = pygame.joystick.Joystick(0)
         self.j.init()
         print('connected')
-        time.sleep(2.0)
 
 
     def isControllerPresent(self):
