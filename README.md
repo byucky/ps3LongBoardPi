@@ -16,7 +16,7 @@ gcc -o sixpair sixpair.c -lusb
 Next we tell the controller to connect to the pi using sixpair.
 Be sure you're bluetooth dongle is pluged in or bluetooth in enables with `ifconfig`, the pi should output something like this:
 ```
-bluetooth funcgtioning output
+bluetooth functioning output
 ```
 Now plug the ps3 controller into the pi and run sixpair: `./sixpair`. You should get an output like this.
 ```
