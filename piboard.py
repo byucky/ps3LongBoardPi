@@ -101,10 +101,8 @@ class Skateboard():
 
     def initController(self):
         print('connecting controller')
-        pygame.init()
-        os.putenv('SDL_VIDEODRIVER','fbcon')
-        pygame.display.init()
-        time.sleep(3.0)
+        pygame.joystick.quit()
+        pygame.joystick.init()
         self.j = pygame.joystick.Joystick(0)
         self.j.init()
         print('connected')
@@ -137,7 +135,6 @@ class Skateboard():
                 self.removeController()
             else:
                 if self.j is None:
-                    time.sleep(2.0)
                     self.initController()
 
                 changes = self.getInput()
@@ -159,6 +156,11 @@ class Skateboard():
 
 
 def main():	
+    pygame.init()
+    os.putenv('SDL_VIDEODRIVER','fbcon')
+    pygame.display.init()
+    time.sleep(3.0)
+
     skate = Skateboard()
     skate.mainloop()
     
