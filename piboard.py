@@ -137,6 +137,7 @@ class Skateboard():
                 self.removeController()
             else:
                 if self.j is None:
+                    time.sleep(2.0)
                     self.initController()
 
                 changes = self.getInput()
