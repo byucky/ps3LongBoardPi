@@ -101,10 +101,16 @@ class Skateboard():
 
     def initController(self):
         print('connecting controller')
-        pygame.joystick.quit()
-        pygame.joystick.init()
-        self.j = pygame.joystick.Joystick(0)
-        self.j.init()
+        tries = 0
+        while(tries < 6):
+            if(pygame.joystick.get_count() < 1):
+                pygame.joystick.quit()
+                pygame.joystick.init()
+            else:
+                self.j = pygame.joystick.Joystick(0)
+                self.j.init()
+                break
+            time.sleep(0.5)
         print('connected')
 
 
