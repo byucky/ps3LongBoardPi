@@ -45,7 +45,7 @@ def PowerOffPi():
     subprocess.call(powerdown)
 
 
-class Skateboard():
+class Skateboard(object):
 
     min_speed = 1720
     max_speed = 1100
