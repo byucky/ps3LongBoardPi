@@ -47,11 +47,12 @@ def PowerOffPi():
 
 class Skateboard():
 
-    min_speed = 1720
-    max_speed = 1100
+    
 
     def __init__(self):
         pi.set_PWM_frequency(motor, 50)
+        self.min_speed = 1720
+        self.max_speed = 1100
         self.j = None
         self.power_off_timer = 0
         self.powerThread = threading.Thread(target=PowerOffPi)
@@ -121,7 +122,6 @@ class Skateboard():
 
         try:
             found = re.search(regex, text).group(0)
-            print(found)
             if(found == "00:07:04:EF:27:55"):
                 return True
             else:
@@ -130,6 +130,9 @@ class Skateboard():
             return False
 
     def updateSpeed(self, newSpeed):
+        newSpeed *= -1
+        value = min(max(newSpeed * 1500, self.min_speed), self.max_speed)
+        pi.set_servo_pulsewidth(motor, value)
         return True
     
     def OutputButtonValues(self, changes):
