@@ -143,6 +143,7 @@ class Skateboard():
             return False
 
     def updateSpeed(self, newSpeed):
+        print('update speed')
         self.speed = 1500 + (500 * newSpeed)
     
     def OutputButtonValues(self, changes):
