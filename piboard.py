@@ -47,8 +47,8 @@ def PowerOffPi():
 
 class Skateboard(object):
 
-    max_speed = 1720
-    min_speed = 1100
+    min_speed = 1720
+    max_speed = 1100
 
     def __init__(self):
         pi.set_PWM_frequency(motor, 50)
