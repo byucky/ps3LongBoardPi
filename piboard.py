@@ -47,8 +47,8 @@ def PowerOffPi():
 
 class Skateboard(object):
 
-    min_speed = 1720
-    max_speed = 1100
+    max_speed = 1720
+    min_speed = 1100
 
     def __init__(self):
         pi.set_PWM_frequency(motor, 50)
@@ -70,7 +70,6 @@ class Skateboard(object):
     
     @speed.setter
     def speed(self, value):
-        print(value)
         value = max(min(value, Skateboard.min_speed), Skateboard.max_speed)
         print(value)
         pi.set_servo_pulsewidth(motor, value)		
@@ -104,7 +103,8 @@ class Skateboard(object):
         #update state based on gathered input
         if "axis" in changes:
             # self.buttons['axis'] = changes['axis']
-            self.updateSpeed(changes['axis'])
+            if(self.buttons['enable'] == 1):
+                self.updateSpeed(changes['axis'])
         if "enable" in changes:
             self.buttons['enable'] = changes['enable']
         if "power_off" in changes:
@@ -144,6 +144,7 @@ class Skateboard(object):
 
     def updateSpeed(self, newSpeed):
         print('update speed')
+        newSpeed *= -1
         self.speed = 1500 + (500 * newSpeed)
     
     def OutputButtonValues(self, changes):
