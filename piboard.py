@@ -47,12 +47,13 @@ def PowerOffPi():
 
 class Skateboard():
 
-    
+    min_speed = 1720
+    max_speed = 1100
 
     def __init__(self):
         pi.set_PWM_frequency(motor, 50)
-        self.min_speed = 1720
-        self.max_speed = 1100
+        self.speed = 1500
+        self.__speed = 1500
         self.j = None
         self.power_off_timer = 0
         self.powerThread = threading.Thread(target=PowerOffPi)
@@ -62,6 +63,18 @@ class Skateboard():
             'enable': 0,
             'power_off': 0
         }
+    
+    @property
+    def speed(self):
+        return self.__speed
+    
+    @speed.setter
+    def speed(self, value):
+        print(value)
+        value = max(min(value, Skateboard.min_speed), Skateboard.max_speed)
+        print(value)
+        pi.set_servo_pulsewidth(motor, value)		
+        self.__speed = value
 
     def getInput(self):
 
@@ -130,10 +143,7 @@ class Skateboard():
             return False
 
     def updateSpeed(self, newSpeed):
-        newSpeed *= -1
-        value = min(max(newSpeed * 1500, self.min_speed), self.max_speed)
-        pi.set_servo_pulsewidth(motor, value)
-        return True
+        self.speed = 1500 + (500 * newSpeed)
     
     def OutputButtonValues(self, changes):
         pprint(changes)
