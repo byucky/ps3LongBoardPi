@@ -47,6 +47,8 @@ def PowerOffPi():
 
 class Skateboard(object):
 
+    top_threshold = 1578
+    bot_threshold = 1350
     min_speed = 1850
     max_speed = 1100
     max_acceleration = 10
@@ -55,6 +57,8 @@ class Skateboard(object):
 
     def __init__(self):
         pi.set_PWM_frequency(motor, 50)
+
+        self.coast = True
 
         self.speed = 1500
         self.__speed = 1500
@@ -122,10 +126,12 @@ class Skateboard(object):
         if "axis" in changes:
             # self.buttons['axis'] = changes['axis']
             if(self.buttons['enable'] == 1):
+                self.coast = False
                 self.updateAcceleration(changes['axis'])
         if "enable" in changes:
             self.buttons['enable'] = changes['enable']
             if(self.buttons['enable'] == 0):
+                self.coast = True
                 self.updateAcceleration(0.3)
         if "power_off" in changes:
             self.buttons['power_off'] = changes['power_off']
@@ -173,7 +179,10 @@ class Skateboard(object):
             
 
     def updateSpeed(self):
-        self.speed = self.speed + self.acceleration
+        if(self.coast and self.speed < Skateboard.top_threshold and self.speed > Skateboard.bot_threshold):
+            self.speed = 1500
+        else:
+            self.speed = self.speed + self.acceleration
     
     def OutputButtonValues(self, changes):
         pprint(changes)
