@@ -132,7 +132,10 @@ class Skateboard(object):
             self.buttons['enable'] = changes['enable']
             if(self.buttons['enable'] == 0):
                 self.coast = True
-                self.updateAcceleration(0.3)
+                if(self.speed - 1500 > 0):   
+                    self.updateAcceleration(0.3)
+                else:
+                    self.updateAcceleration(-0.3)
         if "power_off" in changes:
             self.buttons['power_off'] = changes['power_off']
 
