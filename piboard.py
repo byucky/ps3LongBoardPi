@@ -182,10 +182,13 @@ class Skateboard(object):
         if(self.coast and self.speed < Skateboard.top_threshold and self.speed > Skateboard.bot_threshold):
             self.speed = 1500
         else:
-            if(self.acceleration > 0 and self.speed < Skateboard.top_threshold):
-                self.speed = Skateboard.top_threshold
-            elif(self.acceleration < 0 and self.speed > Skateboard.bot_threshold):
-                self.speed = Skateboard.bot_threshold
+            if(self.speed == 1500):
+                if(self.acceleration > 0 and self.speed < Skateboard.top_threshold):
+                    self.speed = Skateboard.top_threshold
+                elif(self.acceleration < 0 and self.speed > Skateboard.bot_threshold):
+                    self.speed = Skateboard.bot_threshold
+                else:
+                    self.speed = self.speed + self.acceleration
             else:
                 self.speed = self.speed + self.acceleration
     
