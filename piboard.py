@@ -163,11 +163,13 @@ class Skateboard(object):
             return False
     
     def updateAcceleration(self, i):
+        print('update accel')
         i *= -1
         if(i > 0):
             this.acceleration = Skateboard.max_acceleration * i
         else:
             this.acceleration = Skateboard.max_decceleration * i
+        print(this.acceleration)
             
 
     def updateSpeed(self):
