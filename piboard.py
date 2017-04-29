@@ -47,13 +47,20 @@ def PowerOffPi():
 
 class Skateboard(object):
 
-    min_speed = 1720
+    min_speed = 1850
     max_speed = 1100
+    max_acceleration = 10
+    max_decceleration = 10
+    coast_diminish =  -0.5
 
     def __init__(self):
         pi.set_PWM_frequency(motor, 50)
+
         self.speed = 1500
         self.__speed = 1500
+        self.acceleration = 0
+        self.__acceleration = 0
+
         self.j = None
         self.power_off_timer = 0
         self.powerThread = threading.Thread(target=PowerOffPi)
@@ -64,6 +71,17 @@ class Skateboard(object):
             'power_off': 0
         }
     
+    @property
+    def acceleration(self):
+        return self.__acceleration
+
+    @acceleration.setter
+    def acceleration(self, value):
+        if(value > 0):
+            self.__acceleration = min(value, Skateboard.max_acceleration)
+        else:
+            self.__acceleration = max(value, Skateboard.max_decceleration * -1)
+
     @property
     def speed(self):
         return self.__speed
@@ -104,9 +122,11 @@ class Skateboard(object):
         if "axis" in changes:
             # self.buttons['axis'] = changes['axis']
             if(self.buttons['enable'] == 1):
-                self.updateSpeed(changes['axis'])
+                self.updateAcceleration(changes['axis'])
         if "enable" in changes:
             self.buttons['enable'] = changes['enable']
+            if(self.buttons['enable'] == 0):
+                self.updateAcceleration(0.3)
         if "power_off" in changes:
             self.buttons['power_off'] = changes['power_off']
 
@@ -128,7 +148,7 @@ class Skateboard(object):
         print('connected')
 
 
-    def isControllerPresent(self):
+    def isControllerPresent(self):   
         regex = r"\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}"
         proc = subprocess.Popen(['hcitool', 'con'], stdout=subprocess.PIPE)
         text = proc.stdout.read()
@@ -141,11 +161,17 @@ class Skateboard(object):
                 return False
         except AttributeError:
             return False
+    
+    def updateAcceleration(self, i):
+        i *= -1
+        if(i > 0):
+            this.acceleration = Skateboard.max_acceleration * i
+        else:
+            this.acceleration = Skateboard.max_decceleration * i
+            
 
-    def updateSpeed(self, newSpeed):
-        print('update speed')
-        newSpeed *= -1
-        self.speed = 1500 + (500 * newSpeed)
+    def updateSpeed(self):
+        this.speed = this.speed + this.acceleration
     
     def OutputButtonValues(self, changes):
         pprint(changes)
@@ -161,9 +187,10 @@ class Skateboard(object):
                 changes = self.getInput()
                 self.update(changes)
                 self.PowerOffPi()
+                self.updateSpeed()
                 if(is_debug):
                     self.OutputButtonValues(changes)
-            time.sleep(0.1)
+            time.sleep(0.25)
 
     def PowerOffPi(self):
         if self.buttons['power_off'] is 1:
