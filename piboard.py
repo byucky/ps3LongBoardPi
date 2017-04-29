@@ -166,14 +166,14 @@ class Skateboard(object):
         print('update accel')
         i *= -1
         if(i > 0):
-            this.acceleration = Skateboard.max_acceleration * i
+            self.acceleration = Skateboard.max_acceleration * i
         else:
-            this.acceleration = Skateboard.max_decceleration * i
-        print(this.acceleration)
+            self.acceleration = Skateboard.max_decceleration * i
+        print(self.acceleration)
             
 
     def updateSpeed(self):
-        this.speed = this.speed + this.acceleration
+        self.speed = self.speed + self.acceleration
     
     def OutputButtonValues(self, changes):
         pprint(changes)
