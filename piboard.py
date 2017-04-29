@@ -182,7 +182,12 @@ class Skateboard(object):
         if(self.coast and self.speed < Skateboard.top_threshold and self.speed > Skateboard.bot_threshold):
             self.speed = 1500
         else:
-            self.speed = self.speed + self.acceleration
+            if(self.acceleration > 0 and self.speed < Skateboard.top_threshold):
+                self.speed = Skateboard.top_threshold
+            elif(self.acceleration < 0 and self.speed > Skateboard.bot_threshold):
+                self.speed = Skateboard.bot_threshold
+            else:
+                self.speed = self.speed + self.acceleration
     
     def OutputButtonValues(self, changes):
         pprint(changes)
