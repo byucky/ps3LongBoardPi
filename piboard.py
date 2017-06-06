@@ -23,9 +23,9 @@ pathToController = '/dev/input/js0'
 
 INPUTS = {
     "THROTTLE_AXIS" : 1,
-    "THROTTLE_ENABLE": 8,
-    "POWER_OFF": 13,
-    "CRUISE" : 10, 
+    "FORWARD_ENABLE": 8,
+    "REVERSE_ENABLE" : 10,
+    "POWER_OFF": 13
 }
 
 
@@ -49,10 +49,10 @@ class Skateboard(object):
 
     top_threshold = 1578
     bot_threshold = 1350
-    min_speed = 1850
+    min_speed = 2000
     max_speed = 1100
-    max_acceleration = 10
-    max_decceleration = 10
+    max_acceleration = 30
+    max_decceleration = 30
     coast_diminish =  -0.5
 
     def __init__(self):
@@ -109,13 +109,17 @@ class Skateboard(object):
                     if event.axis == INPUTS["THROTTLE_AXIS"]:
                         changes["axis"] = event.value
                 if event.type == pygame.JOYBUTTONDOWN:
-                    if event.button == INPUTS["THROTTLE_ENABLE"]:
-                        changes["enable"] = 1
+                    if event.button == INPUTS["FORWARD_ENABLE"]:
+                        changes["forward"] = 1
+                    if event.button == INPUTS["REVERSE_ENABLE"]:
+                        changes['reverse'] = 1
                     if event.button == INPUTS["POWER_OFF"]:
                         changes['power_off'] = 1
                 if event.type == pygame.JOYBUTTONUP:
-                    if event.button == INPUTS["THROTTLE_ENABLE"]:
-                        changes["enable"] = 0
+                    if event.button == INPUTS["FORWARD_ENABLE"]:
+                        changes["forward"] = 0
+                    if event.button == INPUTS["REVERSE_ENABLE"]:
+                        changes['reverse'] = 0
                     if event.button == INPUTS["POWER_OFF"]:
                         changes['power_off'] = 0
 
@@ -125,19 +129,24 @@ class Skateboard(object):
         #update state based on gathered input
         if "axis" in changes:
             # self.buttons['axis'] = changes['axis']
-            if(self.buttons['enable'] == 1):
+            if(self.buttons['forward'] == 1):
                 self.coast = False
                 self.updateAcceleration(changes['axis'])
-        if "enable" in changes:
-            self.buttons['enable'] = changes['enable']
-            if(self.buttons['enable'] == 0):
+        if "forward" in changes:
+            self.buttons['forward'] = changes['forward']
+        
+        if "reverse" in changes:
+            self.buttons['reverse'] = changes['reverse']
+            
+        if "power_off" in changes:
+            self.buttons['power_off'] = changes['power_off']
+
+        if(self.buttons['forward'] == 0 and self.buttons['reverse'] == 0):
                 self.coast = True
                 if(self.speed - 1500 > 0):   
                     self.updateAcceleration(0.3)
                 else:
                     self.updateAcceleration(-0.3)
-        if "power_off" in changes:
-            self.buttons['power_off'] = changes['power_off']
 
     def removeController(self):
         self.j = None
@@ -184,14 +193,16 @@ class Skateboard(object):
     def updateSpeed(self):
         if(self.coast and self.speed < Skateboard.top_threshold and self.speed > Skateboard.bot_threshold):
             self.speed = 1500
-        else:
-            if(self.speed < Skateboard.top_threshold and self.speed > Skateboard.bot_threshold):
+        elif(self.buttons['forward'] == 1):
+            if(self.speed < Skateboard.top_threshold):
                 if(self.acceleration > 0):
                     self.speed = Skateboard.top_threshold
-                elif(self.acceleration < 0):
-                    self.speed = Skateboard.bot_threshold
-                else:
-                    self.speed = self.speed + self.acceleration    
+            else:
+                self.speed = self.speed + self.acceleration
+        else:
+            if(self.speed > Skateboard.bot_threshold):
+                if(self.acceleration < 0):
+                    self.speed = Skateboard.bot_threshold  
             else:
                 self.speed = self.speed + self.acceleration
     
@@ -202,6 +213,8 @@ class Skateboard(object):
         while(True):
             if not self.isControllerPresent():
                 self.removeController()
+                self.acceleration = -10
+                self.updateSpeed()
             else:
                 if self.j is None:
                     self.initController()
