@@ -94,7 +94,6 @@ class Skateboard(object):
     @speed.setter
     def speed(self, value):
         value = max(min(value, Skateboard.min_speed), Skateboard.max_speed)
-        print(value)
         pi.set_servo_pulsewidth(motor, value)		
         self.__speed = value
 
@@ -202,6 +201,7 @@ class Skateboard(object):
                 self.speed = 1500
         elif(self.buttons['reverse'] == 1):
             if(self.speed > Skateboard.bot_threshold):
+                print(self.acceleration)
                 if(self.acceleration < 0):
                     self.speed = Skateboard.bot_threshold  
             elif(self.speed + self.acceleration < Skateboard.bot_threshold):
