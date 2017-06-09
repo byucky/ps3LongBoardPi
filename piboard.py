@@ -182,13 +182,11 @@ class Skateboard(object):
             return False
     
     def updateAcceleration(self, i):
-        print('update accel')
         i *= -1
         if(i > 0):
             self.acceleration = Skateboard.max_acceleration * i
         else:
             self.acceleration = Skateboard.max_decceleration * i
-        print(self.acceleration)
             
 
     def updateSpeed(self):
@@ -213,6 +211,9 @@ class Skateboard(object):
     
     def OutputButtonValues(self, changes):
         pprint(changes)
+        pprint(self.buttons)
+        print(self.acceleration)
+        print(self.speed)
 
     def mainloop(self):
         while(True):
