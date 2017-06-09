@@ -71,8 +71,9 @@ class Skateboard(object):
         self.powerThread.start()
         self.buttons = {
             'axis' : 0,
-            'enable': 0,
-            'power_off': 0
+            'forward' : 0,
+            'reverse' : 0,
+            'power_off' : 0
         }
     
     @property
