@@ -3,7 +3,8 @@ Code to run an electric longboard ESC with a raspberry pi + bluetooth using a ps
 
 # Install Dependencies
 ```
-sudo apt-get -y install libusb-dev joystick python-pygame
+sudo apt-get update
+sudo apt-get -y install libusb-dev joystick python-pygame pigpio python-pigpio python3-pigpio
 ```
 
 # To Connect Controller to Pi (Jessie and Jessie lite)
