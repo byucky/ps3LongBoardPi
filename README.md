@@ -73,5 +73,8 @@ I made the modifications to sixpair to work with the navigation controller.
 Run the code with `sudo python piboard.py debug` and make sure your inputs are working.
 Then hook everything up to your board and run `sudo python piboard.py` and get your motor turning.
 
-# Commands
-
+# Add these commands to "/etc/rc.local" before the `exit 0` line
+```
+sudo pigpiod
+python /home/pi/ps3LongBoard/piboard.py &
+```
