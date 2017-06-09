@@ -129,7 +129,7 @@ class Skateboard(object):
         #update state based on gathered input
         if "axis" in changes:
             # self.buttons['axis'] = changes['axis']
-            if(self.buttons['forward'] == 1):
+            if(self.buttons['forward'] == 1 or self.buttons['reverse']):
                 self.coast = False
                 self.updateAcceleration(changes['axis'])
         if "forward" in changes:
