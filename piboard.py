@@ -198,14 +198,18 @@ class Skateboard(object):
             if(self.speed < Skateboard.top_threshold):
                 if(self.acceleration > 0):
                     self.speed = Skateboard.top_threshold
-            else:
+            elif(self.speed + self.acceleration > Skateboard.top_threshold):
                 self.speed = self.speed + self.acceleration
-        else:
+            else:
+                self.speed = 1500
+        elif(self.buttons['reverse'] == 1):
             if(self.speed > Skateboard.bot_threshold):
                 if(self.acceleration < 0):
                     self.speed = Skateboard.bot_threshold  
-            else:
+            elif(self.speed + self.acceleration < Skateboard.bot_threshold):
                 self.speed = self.speed + self.acceleration
+            else:
+                self.speed = 1500
     
     def OutputButtonValues(self, changes):
         pprint(changes)
