@@ -70,7 +70,7 @@ This explaination was highly based on [this](https://www.piborg.org/rpi-ps3-help
 I made the modifications to sixpair to work with the navigation controller.
 
 # Make sure it's all working
-Run the code with `sudo python piboard.py debug` and make sure your inputs are working.
+Run the code with `sudo pigpiod` then `sudo python piboard.py debug` and make sure your inputs are working.
 Then hook everything up to your board and run `sudo python piboard.py` and get your motor turning.
 
 # Add these commands to "/etc/rc.local" before the `exit 0` line
