@@ -53,7 +53,7 @@ class Skateboard(object):
     max_speed = 1100
     max_acceleration = 30
     max_decceleration = 30
-    coast_diminish =  -0.5
+    coast_diminish =  10
 
     def __init__(self):
         pi.set_PWM_frequency(motor, 50)
@@ -129,7 +129,7 @@ class Skateboard(object):
         #update state based on gathered input
         if "axis" in changes:
             # self.buttons['axis'] = changes['axis']
-            if(self.buttons['forward'] == 1 or self.buttons['reverse']):
+            if(self.buttons['forward'] == 1 or self.buttons['reverse'] == 1):
                 self.coast = False
                 self.updateAcceleration(changes['axis'])
         if "forward" in changes:
@@ -191,6 +191,8 @@ class Skateboard(object):
     def updateSpeed(self):
         if(self.coast and self.speed < Skateboard.top_threshold and self.speed > Skateboard.bot_threshold):
             self.speed = 1500
+        elif(self.coast):
+            self.speed += self.acceleration
         elif(self.buttons['forward'] == 1):
             if(self.speed < Skateboard.top_threshold):
                 if(self.acceleration > 0):
