@@ -3,7 +3,8 @@ Code to run an electric longboard ESC with a raspberry pi + bluetooth using a ps
 
 # Install Dependencies
 ```
-sudo apt-get -y install libusb-dev joystick python-pygame
+sudo apt-get update
+sudo apt-get -y install libusb-dev joystick python-pygame pigpio python-pigpio python3-pigpio
 ```
 
 # To Connect Controller to Pi (Jessie and Jessie lite)
@@ -69,8 +70,11 @@ This explaination was highly based on [this](https://www.piborg.org/rpi-ps3-help
 I made the modifications to sixpair to work with the navigation controller.
 
 # Make sure it's all working
-Run the code with `sudo python piboard.py debug` and make sure your inputs are working.
+Run the code with `sudo pigpiod` then `sudo python piboard.py debug` and make sure your inputs are working.
 Then hook everything up to your board and run `sudo python piboard.py` and get your motor turning.
 
-# Commands
-
+# Add these commands to "/etc/rc.local" before the `exit 0` line
+```
+sudo pigpiod
+python /home/pi/ps3LongBoard/piboard.py &
+```
