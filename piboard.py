@@ -51,7 +51,7 @@ class Skateboard(object):
     bot_threshold = 1350
     min_speed = 2000
     max_speed = 1100
-    max_acceleration = 30
+    max_acceleration = 15
     max_decceleration = 30
     coast_diminish =  10
 
